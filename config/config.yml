@@ -1,0 +1,33 @@
+http:
+    port: 8080
+    mode: "debug"
+    read-timeout: "60s"
+    write-timeout: "60s"
+log:
+    level: debug
+    console: true
+    file: ./logs/poop-server.log
+    keep: 30
+db:
+    host: "127.0.0.1"
+    port: 3306
+    user: "root"
+    password: "root"
+    database: "poop"
+    timeout: "10s"
+    max-open-conns: 10
+    max-idle-conns: 3
+chains:
+    bsctest:
+        chain-name: "bsctest"
+        chain-id: 97
+        interval: "10s"
+        start-block: 30257130
+        delay-block: 1
+        max-block: 100
+        urls:
+            - "https://data-seed-prebsc-1-s1.binance.org:8545" 
+        abi: 
+            Poop: "./config/abi/Poop.json"
+        contracts:
+            - "0x5Ea76399BfAabfA9f3FAb81b3dC0D42025A1A1Ab"

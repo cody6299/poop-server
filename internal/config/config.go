@@ -13,6 +13,7 @@ type (
         HTTP `yaml:"http"`
         LOG `yaml:"log"`
         DB `yaml:"db"`
+        CHAINS map[string]CHAIN `yaml:"chains"`
     }
 
     HTTP struct {
@@ -39,20 +40,32 @@ type (
         MaxOpenConns int `env-required:true yaml:"max-open-conns"`
         MaxIdleConns int `env-required:true yaml:"max-idle-conns"`
     }
+
+    CHAIN struct {
+        ChainName string `yaml:"chain-name"`
+        ChainId uint `yaml:"chain-id"`
+        Interval time.Duration `yaml:"interval"`
+        StartBlock uint64 `yaml:"start-block"`
+        DelayBlock uint64 `yaml:"delay-block"`
+        MaxBlock uint64 `yaml:"max-block"`
+        Urls []string `yaml:"urls"`
+        Contracts []string `yaml:"contracts"`
+        Abi map[string]string `yaml:"abi"`
+    }
 )
 
 func NewConfig() (*Config, error) {
     cfg := &Config{}
 
-    err := cleanenv.ReadConfig("./config/server.yml", cfg)
+    err := cleanenv.ReadConfig("./config/config.yml", cfg)
     if err != nil {
         return nil, fmt.Errorf("file config error: %w", err)
     }
-
+    /*
     err = cleanenv.ReadEnv(cfg)
     if err != nil {
         return nil, fmt.Errorf("env config error: %w", err)
     }
-
+    */
     return cfg, nil
 }
