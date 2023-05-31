@@ -95,8 +95,8 @@ func History(c *gin.Context) {
     records := []*PriceRecordResponse{}
     for _, priceInfo := range *priceInfoList {
         record := &PriceRecordResponse{
-            //BeginTime: priceInfo.BeginTime,
-            //EndTTime: priceInfo.EndTime,
+            BeginTime: priceInfo.BeginTime,
+            EndTime: priceInfo.EndTime,
             PriceOpen: priceInfo.PriceOpen,
             PriceHigh: priceInfo.PriceHigh,
             PriceLow: priceInfo.PriceLow,
@@ -148,8 +148,8 @@ func All(c *gin.Context) {
     records := []*PriceRecordResponse{}
     for _, priceInfo := range *priceInfoList {
         record := &PriceRecordResponse{
-            //BeginTime: priceInfo.BeginTime,
-            //EndTTime: priceInfo.EndTime,
+            BeginTime: priceInfo.BeginTime,
+            EndTime: priceInfo.EndTime,
             PriceOpen: priceInfo.PriceOpen,
             PriceHigh: priceInfo.PriceHigh,
             PriceLow: priceInfo.PriceLow,
