@@ -26,6 +26,17 @@ CREATE TABLE IF NOT EXISTS `events` (
     UNIQUE KEY `uniq_key`(`chain`, `block_hash`, `log_index`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '链上事件';
 
+DROP TABLE IF exists `user_referral_code`;
+CREATE TABLE IF NOT EXISTS `user_referral_code` (
+    `id`            BIGINT UNSIGNED     NOT NULL PRIMARY KEY AUTO_INCREMENT                             COMMENT '自增id',
+    `address`       CHAR(42)            NOT NULL                                                        COMMENT '用户的钱包地址',
+    `referral_code` CHAR(12)                                                                            COMMENT '根据链上交易顺序生成的uid',
+    `create_at`     DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP                              COMMENT '创建时间',
+    `update_at`     DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  COMMENT '修改时间',
+    UNIQUE KEY `uniq_address`(`address`),
+    UNIQUE KEY `uniq_referral_code`(`referral_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=123456, DEFAULT CHARSET=utf8mb4 COMMENT '用户的链上信息,由链上event决定';
+
 DROP TABLE IF exists `user_chain_info`;
 CREATE TABLE IF NOT EXISTS `user_chain_info` (
     `id`            BIGINT UNSIGNED     NOT NULL PRIMARY KEY AUTO_INCREMENT                             COMMENT '自增id',
@@ -63,6 +74,8 @@ CREATE TABLE IF NOT EXISTS `price_info` (
     `chain`         VARCHAR(64)         NOT NULL                                                        COMMENT '所在链',
     `price_type`    CHAR(64)            NOT NULL                                                        COMMENT '价格类型 1m 5m 15m 30m 1h 4h 1d 3d 7d 14d 1month 3month 6month',
     `price_key`     BIGINT UNSIGNED                                                                     COMMENT '价格记录的key',
+    `begin__time`   BIGINT UNSIGNED                                                                     COMMENT '开始时间',
+    `end__time`     BIGINT UNSIGNED                                                                     COMMENT '结束时间',
     `price_open`    BIGINT UNSIGNED                                                                     COMMENT '',
     `price_high`    BIGINT UNSIGNED                                                                     COMMENT '',
     `price_low`     BIGINT UNSIGNED                                                                     COMMENT '',
@@ -72,13 +85,14 @@ CREATE TABLE IF NOT EXISTS `price_info` (
     UNIQUE KEY `uniq_key`(`chain`, `price_type`, `price_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '价格历史记录';
 
-DROP TABLE IF exists `whitelist`;
-CREATE TABLE IF NOT EXISTS `whitelist` (
+DROP TABLE IF exists `whitelist_info`;
+CREATE TABLE IF NOT EXISTS `whitelist_info` (
     `id`            BIGINT UNSIGNED     NOT NULL PRIMARY KEY AUTO_INCREMENT                             COMMENT '自增id',
-    `address`       VARCHAR(64)         NOT NULL                                                        COMMENT '用户钱包地址',
-    `max_amount`    VARCHAR(256)        NOT NULL                                                        COMMENT '最大数量',
-    `proof`         VARCHAR(2048)       NOT NULL                                                        COMMENT '证据',
+    `chain`             VARCHAR(64)         NOT NULL                                                        COMMENT '所在链',
+    `address`       VARCHAR(66)         NOT NULL                                                        COMMENT '用户钱包地址',
+    `max_amount`    TEXT                NOT NULL                                                        COMMENT '最大数量',
+    `proof`         TEXT                NOT NULL                                                        COMMENT '证据',
     `create_at`     DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP                              COMMENT '创建时间',
     `update_at`     DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  COMMENT '修改时间',
-    UNIQUE KEY `uniq_address`(`address`)
+    UNIQUE KEY `uniq_address`(`chain`, `address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '白名单用户';

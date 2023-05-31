@@ -195,6 +195,15 @@ func (h *PriceSubscribe) Handle(event *types.Log, dbTransaction *gorm.DB) (error
         }
     }
     {
+        //3 day
+        affectRow, err := h.priceHistory(int64(3 * 24 * 60 * 60), priceTime, price.Uint64(), dbTransaction)
+        if err != nil {
+            return err
+        } else {
+            log.Debugf("process 1minute price history finish. affectRow=%d", affectRow)
+        }
+    }
+    {
         //7 day
         affectRow, err := h.priceHistory(int64(7 * 24 * 60 * 60), priceTime, price.Uint64(), dbTransaction)
         if err != nil {
@@ -256,6 +265,8 @@ func (h *PriceSubscribe) priceHistory(interval int64, priceTime time.Time, price
             Chain: h.chain.ChainName,
             PriceType: priceType,
             PriceKey: keyTime,
+            BeginTime: uint64(priceTime.Unix()),
+            EndTime: uint64(priceTime.Unix() + interval - 1),
             PriceOpen: price,
             PriceHigh: price,
             PriceLow: price,

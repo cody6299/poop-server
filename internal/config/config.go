@@ -5,6 +5,7 @@ import (
     "time"
     "github.com/ilyakaznacheev/cleanenv"
     log "github.com/sirupsen/logrus"
+    "poop.fi/poop-server/internal/utils"
 )
 
 type (
@@ -54,6 +55,8 @@ type (
     }
 )
 
+var chainIdMap = map[uint]*string{}
+
 func NewConfig() (*Config, error) {
     cfg := &Config{}
 
@@ -61,6 +64,10 @@ func NewConfig() (*Config, error) {
     if err != nil {
         return nil, fmt.Errorf("file config error: %w", err)
     }
+    for _, value := range cfg.CHAINS {
+        chainIdMap[value.ChainId] = utils.PTR(value.ChainName)
+    }
+
     /*
     err = cleanenv.ReadEnv(cfg)
     if err != nil {
@@ -68,4 +75,8 @@ func NewConfig() (*Config, error) {
     }
     */
     return cfg, nil
+}
+
+func GetChainNameByChainId(chainId uint) *string {
+    return chainIdMap[chainId]
 }

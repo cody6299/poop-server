@@ -3,6 +3,8 @@ package routers
 import (
     "github.com/gin-gonic/gin"
     "poop.fi/poop-server/internal/server/api/whitelist"
+    "poop.fi/poop-server/internal/server/api/referral"
+    "poop.fi/poop-server/internal/server/api/price"
 )
 
 func InitRouter() *gin.Engine {
@@ -13,6 +15,19 @@ func InitRouter() *gin.Engine {
     {
         apiWhitelist := r.Group("/poop/whitelist")
         apiWhitelist.POST("/info", whitelist.Info)
+    }
+
+    {
+        apiReferral := r.Group("/poop/referral")
+        apiReferral.POST("/address", referral.Address)
+        apiReferral.POST("/code", referral.Code)
+        apiReferral.POST("/reward", referral.Reward)
+    }
+
+    {
+        apiPrice := r.Group("/poop/price")
+        apiPrice.POST("/history", price.History)
+        apiPrice.POST("/all", price.All)
     }
 
     return r

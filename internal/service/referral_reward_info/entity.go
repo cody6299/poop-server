@@ -16,6 +16,6 @@ type ReferralRewardInfo struct {
     UpdateAt        time.Time   `gorm:"autoUpdateTime"`
 }
 
-func (v ReferralRewardInfo) TableName() string {
+func (v *ReferralRewardInfo) TableName() string {
     return "referral_reward_info"
 }

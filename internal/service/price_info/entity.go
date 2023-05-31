@@ -9,6 +9,8 @@ type PriceInfo struct {
     Chain           string
     PriceType       string
     PriceKey        uint64
+    BeginTime       uint64
+    EndTime         uint64
     PriceOpen       uint64
     PriceHigh       uint64
     PriceLow        uint64
