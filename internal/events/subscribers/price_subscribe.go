@@ -285,7 +285,7 @@ func (h *PriceSubscribe) priceHistory(interval int64, priceTime time.Time, price
     if err != nil {
         return 0, err
     } else if affectRow != 1 && affectRow != 2 {
-        return 0, errors.New(fmt.Sprintf("insert or update priceinfo failed affectRow=%d", affectRow))
+        //return 0, errors.New(fmt.Sprintf("insert or update priceinfo failed affectRow=%d", affectRow))
     }
     return affectRow, nil
 }
