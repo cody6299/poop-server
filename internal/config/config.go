@@ -1,6 +1,7 @@
 package config
 
 import (
+    "os"
     "fmt"
     "time"
     "github.com/ilyakaznacheev/cleanenv"
@@ -59,8 +60,13 @@ var chainIdMap = map[uint]*string{}
 
 func NewConfig() (*Config, error) {
     cfg := &Config{}
+    fileName := os.Getenv("CONFIG_FILE")
+    if fileName == "" {
+        fileName = "./config/config.yml"
+    }
+    fmt.Printf("config file: %s\n", fileName)
 
-    err := cleanenv.ReadConfig("./config/config.yml", cfg)
+    err := cleanenv.ReadConfig(fileName, cfg)
     if err != nil {
         return nil, fmt.Errorf("file config error: %w", err)
     }
