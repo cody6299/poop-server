@@ -9,26 +9,25 @@ log:
     file: ./logs/poop-server.log
     keep: 30
 db:
-    host: "ppap.czxiju4ezx7o.ap-southeast-1.rds.amazonaws.com"
+    host: "127.0.0.1"
     port: 3306
-    user: "rdsdba"
-    password: "0ruiaBW4p_KqDFHm"
+    user: "root"
+    password: "root"
     database: "poop"
     timeout: "10s"
     max-open-conns: 10
     max-idle-conns: 3
 chains:
     bsctest:
-        chain-name: "bscmain"
-        chain-id: 56
+        chain-name: "bsctest"
+        chain-id: 97
         interval: "10s"
-        start-block: 29117817
+        start-block: 30274323
         delay-block: 1
         max-block: 100
         urls:
-            - "https://bsc.getblock.io/31c208fb-4f4c-4295-831f-fbc711463e4c/mainnet/" 
+            - "https://data-seed-prebsc-1-s1.binance.org:8545" 
         abi: 
             Poop: "./config/abi/Poop.json"
         contracts:
-            - "0xdc5bfCcF5052126a6c5E156dfC992e426c5c0941"
-            - "0xF1fAFdcEE0EBe9a593A69829166B3923756C2926"
+            - "0xc31A6DfC77dffD05Fe779F63EE78E83608FA4C46"
