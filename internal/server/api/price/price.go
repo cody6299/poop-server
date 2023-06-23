@@ -160,7 +160,7 @@ func All(c *gin.Context) {
 
     response := &AllResponse{
         Records: records,
-        Interval: 60,
+        Interval: 300,
     }
 
     g.Response(http.StatusOK, 0, "ok", response)
