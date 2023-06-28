@@ -133,7 +133,7 @@ func All(c *gin.Context) {
         return
     }
 
-    priceType := getPriceType("5minute")
+    priceType := getPriceType("30minute")
     if priceType == nil {
         g.Response(http.StatusOK, -2, "illegal price type", nil)
         return
@@ -160,7 +160,7 @@ func All(c *gin.Context) {
 
     response := &AllResponse{
         Records: records,
-        Interval: 300,
+        Interval: 1800,
     }
 
     g.Response(http.StatusOK, 0, "ok", response)
