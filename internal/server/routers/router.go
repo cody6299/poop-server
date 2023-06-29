@@ -22,6 +22,7 @@ func InitRouter() *gin.Engine {
         apiReferral.POST("/address", referral.Address)
         apiReferral.POST("/code", referral.Code)
         apiReferral.POST("/reward", referral.Reward)
+        apiReferral.GET("/reward-history", referral.RewardHistory)
     }
 
     {

@@ -18,9 +18,9 @@ db:
     max-open-conns: 10
     max-idle-conns: 3
 chains:
-    bsctest:
-        chain-name: "bsctest"
-        chain-id: 97
+    bscmain:
+        chain-name: "bscmain"
+        chain-id: 56
         interval: "10s"
         start-block: 30274323
         delay-block: 1

@@ -18,6 +18,15 @@ type UserChainInfo struct {
     UpdateAt        time.Time   `gorm:"autoUpdateTime"`
 }
 
+type AggregationRecord struct {
+    Referral            *string
+    TotalReferralNum    uint64
+}
+
 func (v UserChainInfo) TableName() string {
+    return "user_chain_info"
+}
+
+func (v AggregationRecord) TableName() string {
     return "user_chain_info"
 }

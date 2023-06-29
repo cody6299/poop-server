@@ -1,8 +1,13 @@
 package referral
 
 import (
+    "fmt"
+    "math/big"
+    "bytes"
     "regexp"
+    "strconv"
     "net/http"
+    "encoding/csv"
     "github.com/gin-gonic/gin"
     log "github.com/sirupsen/logrus"
     "poop.fi/poop-server/internal/server/model"
@@ -261,4 +266,102 @@ func Reward(c *gin.Context) {
     }
 
     g.Response(http.StatusOK, 0, "ok", response)
+}
+
+type RewardHistoryParam struct {
+    ChainId     uint    `json:"chain_id" binding:"required"`
+    StartTime   uint    `json:"start_time"`
+    EndTime     uint    `json:"end_time"`
+    SortByTag   string  `json:"sort_by_tag"`
+    Size        uint    `json:"size"`
+}
+
+func RewardHistory(c *gin.Context) {
+    g := model.Gin{C: c}
+
+    chainIdStr := c.Query("chain_id")
+    chainId, err := strconv.Atoi(chainIdStr)
+    if err != nil {
+        g.Response(http.StatusOK, -1, "illegal chainId", nil)
+        return
+    }
+    chainName := config.GetChainNameByChainId(uint(chainId))
+    if chainName == nil {
+        fmt.Println("test124")
+        g.Response(http.StatusOK, -1, "illegal chainId", nil)
+        return
+    }
+
+    startTimeStr := c.DefaultQuery("start_time", "0")
+    startTime, err := strconv.Atoi(startTimeStr)
+    if err != nil {
+        g.Response(http.StatusOK, -1, "illegal start_time", nil)
+        return
+    }
+
+    endTimeStr := c.DefaultQuery("end_time", "")
+    endTime, err := strconv.Atoi(endTimeStr)
+    if err != nil {
+        g.Response(http.StatusOK, -1, "illegal end_time", nil)
+        return
+    }
+
+    start := 0
+    records := []ReferralRewardInfo.AggregationRecord{}
+    referralRewardInfoList, err := ReferralRewardInfo.AggregationByTime(*chainName, startTime, endTime)
+    if err != nil {
+        g.Response(http.StatusOK, -1, "system error", nil)
+        return
+    }
+    if (len(*referralRewardInfoList) > 0) {
+        records = append(records, (*referralRewardInfoList)...)
+        start = start + len(*referralRewardInfoList)
+    }
+    log.Debugf("records: %v", len(records))
+
+    start = 0
+    userChainInfoRecords := []UserChainInfo.AggregationRecord{}
+    userChainInfoList, err := UserChainInfo.AggregationByTime(*chainName, startTime, endTime)
+    if err != nil {
+        g.Response(http.StatusOK, -1, "system error", nil)
+        return
+    }
+    if len(*userChainInfoList) > 0 {
+        userChainInfoRecords = append(userChainInfoRecords, (*userChainInfoList)...)
+        start = start + len(*userChainInfoList)
+    }
+    log.Debugf("records: %v", len(userChainInfoRecords))
+    var userChainInfoMap map[string]*UserChainInfo.AggregationRecord = make(map[string]*UserChainInfo.AggregationRecord)
+    for _, record1 := range userChainInfoRecords {
+        userChainInfoMap[*(record1.Referral)] = &record1
+    }
+    //fmt.Printf("address,total_reward_amount,total_reward_num,total_referral_num")
+
+    dataBytes := new(bytes.Buffer)
+    dataBytes.WriteString("\xEF\xBB\xBF")
+    writer := csv.NewWriter(dataBytes)
+    writer.Write([]string{"id", "address","total_reward_amount","total_reward_num","total_referral_num"})
+    units, _ := new (big.Float).SetString("1000000000000000000") 
+    for index, record2 := range records {
+        address := record2.Address 
+        referralNum := uint64(0)
+        if userChainInfoMap[address] != nil {
+            referralNum = userChainInfoMap[address].TotalReferralNum 
+        }
+        totalRewardAmount := new(big.Float).SetInt(record2.TotalRewardAmount)
+        bodyList := []string{
+            strconv.FormatUint(uint64(index + 1), 10),
+            address, 
+            fmt.Sprintf("%v BNB", totalRewardAmount.Quo(totalRewardAmount, units)),
+            strconv.FormatUint(record2.TotalRewardNum, 10),
+            strconv.FormatUint(referralNum, 10),
+        }
+        writer.Write(bodyList)
+    }
+    writer.Flush()
+
+    c.Writer.Header().Set("Content-type", "application/octet-stream")
+    c.Writer.Header().Set("Content-Disposition", fmt.Sprintf("attachment;filename=%s", "referral.csv"))
+    c.String(200, dataBytes.String())
+    //g.Response(http.StatusOK, 0, "ok", nil)
 }
