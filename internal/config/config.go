@@ -43,6 +43,12 @@ type (
         MaxIdleConns int `env-required:true yaml:"max-idle-conns"`
     }
 
+    ContractAddress struct {
+        Poop string `yaml:"Poop"`
+        PoopRouter string `yaml:"PoopRouter"`
+        WBNBRouter string `yaml:"WBNBRouter"`
+    }
+
     CHAIN struct {
         ChainName string `yaml:"chain-name"`
         ChainId uint `yaml:"chain-id"`
@@ -52,6 +58,7 @@ type (
         MaxBlock uint64 `yaml:"max-block"`
         Urls []string `yaml:"urls"`
         Contracts []string `yaml:"contracts"`
+        Addresses ContractAddress `yaml:"addresses"`
         Abi map[string]string `yaml:"abi"`
     }
 )

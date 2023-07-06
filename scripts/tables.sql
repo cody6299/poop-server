@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `price_info` (
 DROP TABLE IF exists `whitelist_info`;
 CREATE TABLE IF NOT EXISTS `whitelist_info` (
     `id`            BIGINT UNSIGNED     NOT NULL PRIMARY KEY AUTO_INCREMENT                             COMMENT '自增id',
-    `chain`             VARCHAR(64)         NOT NULL                                                        COMMENT '所在链',
+    `chain`         VARCHAR(64)         NOT NULL                                                        COMMENT '所在链',
     `address`       VARCHAR(66)         NOT NULL                                                        COMMENT '用户钱包地址',
     `max_amount`    TEXT                NOT NULL                                                        COMMENT '最大数量',
     `proof`         TEXT                NOT NULL                                                        COMMENT '证据',
@@ -96,3 +96,18 @@ CREATE TABLE IF NOT EXISTS `whitelist_info` (
     `update_at`     DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  COMMENT '修改时间',
     UNIQUE KEY `uniq_address`(`chain`, `address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '白名单用户';
+
+DROP TABLE IF exists `shitcrycle_history`;
+CREATE TABLE IF NOT EXISTS `shitcrycle_history` (
+    `id`            BIGINT UNSIGNED     NOT NULL PRIMARY KEY AUTO_INCREMENT                             COMMENT '自增id',
+    `chain`         VARCHAR(64)         NOT NULL                                                        COMMENT '所在链',
+    `address`       VARCHAR(66)         NOT NULL                                                        COMMENT '用户钱包地址',
+    `token`         CHAR(42)            NOT NULL                                                        COMMENT '消耗币种',
+    `cost`          TEXT                NOT NULL                                                        COMMENT '消耗数量',
+    `recieve`       TEXT                NOT NULL                                                        COMMENT '获得数量',
+    `action_time`   DATETIME            NOT NULL                                                        COMMENT '操作时间',
+    `tx_hash`       CHAR(66)            NOT NULL                                                        COMMENT '交易HASH',
+    `create_at`     DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP                              COMMENT '创建时间',
+    `update_at`     DATETIME            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  COMMENT '修改时间',
+    INDEX `idx_address`(`address`, `chain`)
+)

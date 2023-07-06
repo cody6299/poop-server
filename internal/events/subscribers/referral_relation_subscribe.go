@@ -16,6 +16,7 @@ import (
     "github.com/ethereum/go-ethereum/accounts/abi"
     UserChainInfo "poop.fi/poop-server/internal/service/user_chain_info"
     "poop.fi/poop-server/internal/utils"
+    "github.com/ethereum/go-ethereum/ethclient"
     
 )
 
@@ -59,7 +60,7 @@ type ReferralRelationEvent struct {
     Time        *big.Int
 }
 
-func (h *ReferralRelationSubscribe) Handle(event *types.Log, dbTransaction *gorm.DB) (error) {
+func (h *ReferralRelationSubscribe) Handle(event *types.Log, dbTransaction *gorm.DB, client *ethclient.Client) (error) {
     log.Debugf("[%s] handle ReferralRelation event", h.chain.ChainName)
     referralRelationEvent := ReferralRelationEvent{}
     err := h.abi.UnpackIntoInterface(&referralRelationEvent, "ReferralRelation", event.Data)

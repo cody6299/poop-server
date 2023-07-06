@@ -16,6 +16,7 @@ import (
     "github.com/ethereum/go-ethereum/accounts/abi"
     ReferralRewardInfo "poop.fi/poop-server/internal/service/referral_reward_info"
     UserChainInfo "poop.fi/poop-server/internal/service/user_chain_info"
+    "github.com/ethereum/go-ethereum/ethclient"
 )
 
 type ReferralRewardSubscribe struct {
@@ -59,7 +60,7 @@ type ReferralRewardEvent struct {
     Time        *big.Int
 }
 
-func (h *ReferralRewardSubscribe) Handle(event *types.Log, dbTransaction *gorm.DB) (error) {
+func (h *ReferralRewardSubscribe) Handle(event *types.Log, dbTransaction *gorm.DB, client *ethclient.Client) (error) {
     log.Debugf("[%s] handle ReferralReward event", h.chain.ChainName)
     referralRewardEvent := ReferralRewardEvent{}
     err := h.abi.UnpackIntoInterface(&referralRewardEvent, "ReferralReward", event.Data)

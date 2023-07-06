@@ -5,6 +5,7 @@ import (
     "poop.fi/poop-server/internal/server/api/whitelist"
     "poop.fi/poop-server/internal/server/api/referral"
     "poop.fi/poop-server/internal/server/api/price"
+    "poop.fi/poop-server/internal/server/api/questn"
 )
 
 func InitRouter() *gin.Engine {
@@ -29,6 +30,11 @@ func InitRouter() *gin.Engine {
         apiPrice := r.Group("/poop/price")
         apiPrice.POST("/history", price.History)
         apiPrice.POST("/all", price.All)
+    }
+
+    {
+        apiQuestN := r.Group("/poop/questn")
+        apiQuestN.GET("/task1", questn.Task1)
     }
 
     return r

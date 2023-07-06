@@ -19,6 +19,7 @@ import (
     "github.com/ethereum/go-ethereum/crypto"
     "github.com/ethereum/go-ethereum/core/types"
     "github.com/ethereum/go-ethereum/accounts/abi"
+    "github.com/ethereum/go-ethereum/ethclient"
 )
 
 type PriceSubscribe struct {
@@ -62,7 +63,7 @@ type PriceEvent struct {
     Sent        *big.Int
 }
 
-func (h *PriceSubscribe) Handle(event *types.Log, dbTransaction *gorm.DB) (error) {
+func (h *PriceSubscribe) Handle(event *types.Log, dbTransaction *gorm.DB, client *ethclient.Client) (error) {
     log.Debugf("[%s] handle Price event", h.chain.ChainName)
     priceEvent := PriceEvent{}
     err := h.abi.UnpackIntoInterface(&priceEvent, "Price", event.Data)

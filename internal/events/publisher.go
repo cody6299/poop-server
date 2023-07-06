@@ -76,6 +76,12 @@ func NewPublisher(key string, cfg *config.Config) (*Publisher, error) {
             return nil, err
         }
     }
+    {
+        err := (&subscribers.ShitcoinCrycleSubscribe{}).Init(&publisher)
+        if err != nil {
+            return nil, err
+        }
+    }
     return &publisher, nil
 }
 
@@ -189,7 +195,7 @@ func (publisher *Publisher) Run() {
                     subscribers, exists := publisher.subscribers[topic]
                     if exists && subscribers != nil {
                         for _, subscriber := range(subscribers) {
-                            err = subscriber.Handle(&vLog, dbTransaction)
+                            err = subscriber.Handle(&vLog, dbTransaction, client)
                             if err != nil {
                                 break
                             }
@@ -219,6 +225,9 @@ func (publisher *Publisher) Run() {
                 log.Infof("[%s] publisher work finish. process block [%d-%d] events: %d, doSleep=%t", chainName, currentBlockNumber + 1, endBlockNumber, len(logs), doSleep)
 
                 break
+            }
+            if currentBlockNumber >= 29727257 {
+                return
             }
 
             if (doSleep) {
