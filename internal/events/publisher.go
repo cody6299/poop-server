@@ -226,9 +226,6 @@ func (publisher *Publisher) Run() {
 
                 break
             }
-            if currentBlockNumber >= 29727257 {
-                return
-            }
 
             if (doSleep) {
                 log.Infof("[%s] reach to bestBlockNumber sleep %v", chainName, publisher.chain.Interval)
