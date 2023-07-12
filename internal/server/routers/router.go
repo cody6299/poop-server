@@ -35,6 +35,7 @@ func InitRouter() *gin.Engine {
     {
         apiQuestN := r.Group("/poop/questn")
         apiQuestN.GET("/task1", questn.Task1)
+        apiQuestN.GET("/task2", questn.Task2)
     }
 
     return r
