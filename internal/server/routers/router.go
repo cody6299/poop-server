@@ -6,6 +6,7 @@ import (
     "poop.fi/poop-server/internal/server/api/referral"
     "poop.fi/poop-server/internal/server/api/price"
     "poop.fi/poop-server/internal/server/api/questn"
+    "poop.fi/poop-server/internal/server/api/taskon"
 )
 
 func InitRouter() *gin.Engine {
@@ -36,6 +37,12 @@ func InitRouter() *gin.Engine {
         apiQuestN := r.Group("/poop/questn")
         apiQuestN.GET("/task1", questn.Task1)
         apiQuestN.GET("/task2", questn.Task2)
+    }
+
+    {
+        apiQuestN := r.Group("/poop/taskon")
+        apiQuestN.GET("/task1", taskon.Task1)
+        apiQuestN.GET("/task2", taskon.Task2)
     }
 
     return r
